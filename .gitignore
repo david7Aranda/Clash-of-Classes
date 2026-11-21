@@ -1,0 +1,19 @@
+# Build output
+build/
+out/
+cmake-build-*/
+*.o
+*.obj
+*.exe
+clash_of_classes
+
+# Game data created while playing (each player keeps their own)
+*.sav
+
+# Editor / IDE files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+.DS_Store
