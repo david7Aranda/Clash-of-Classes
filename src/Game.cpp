@@ -8,11 +8,16 @@
 Game::Game()
 {
     // player starts as nullptr, running starts as true.
+    payer = nullptr;
+    running = true;
+
 }
 
 Game::~Game()
 {
     // delete player (deleting a nullptr is safe).
+    delete player;
+
 }
 
 void Game::run()
@@ -20,6 +25,11 @@ void Game::run()
     // printTitle(). While running: showMainMenu(), read a choice, and call
     // newCharacter, loadCharacter, startDuel, saveCharacter, player->printStats(),
     // or set running to false to exit.
+    showMainMenu();
+    while(running)
+    {
+
+    }
 }
 
 void Game::showMainMenu() const
