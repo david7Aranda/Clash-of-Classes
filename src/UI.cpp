@@ -1,13 +1,10 @@
 // UI.cpp
-// Each commented-out function below has a note saying what it should do.
-// When you write one, replace its commented version with your real code.
 
 #include "UI.h"
 #include "Art.h"
 #include <iostream>
 #include <cstdlib>
 #include <limits>
-#include <iostream>
 
 using namespace std;
 
@@ -16,22 +13,53 @@ void printTitle()
     cout << TITLE_ART << endl;
 }
 
-// void printDivider()
-// {
-//     // Print a line of '=' characters.
-// }
+void printDivider()
+{
+    cout << "========================================" << endl;
+}
 
-// void printBox(const std::string & text)
-// {
-//     // Print text inside a box: a +-----+ line above and below, | text | in the middle.
-//     // Tip: std::string(n, '-') makes a string of n dashes.
-// }
+void printBox(const std::string & text)
+{
+    string border = "+" + string(text.length() + 2, '-') + "+";
 
-// void printHealthBar(const int current, const int max)
-// {
-//     // Print something like [##########----------] 50/100.
-//     // The number of # is current * 20 / max.
-// }
+    cout << border << endl;
+    cout << "| " << text << " |" << endl;
+    cout << border << endl;
+}
+
+void printHealthBar(const int current, const int max)
+{
+    int filled = 0;
+
+    if(max > 0)
+    {
+        filled = current * 20 / max;
+    }
+
+    if(filled < 0)
+    {
+        filled = 0;
+    }
+
+    if(filled > 20)
+    {
+        filled = 20;
+    }
+
+    cout << "[";
+
+    for(int i = 0; i < filled; i++)
+    {
+        cout << "#";
+    }
+
+    for(int i = filled; i < 20; i++)
+    {
+        cout << "-";
+    }
+
+    cout << "] " << current << "/" << max << endl;
+}
 
 int readChoice(const int min, const int max)
 {
@@ -57,19 +85,35 @@ int readChoice(const int min, const int max)
     }
 }
 
-// std::string readName()
-// {
-//     // Ask for a name with getline, and ask again if it's empty.
-//     // Tip: after cin >> number, call cin.ignore() before getline.
-// }
+std::string readName()
+{
+    string name;
 
-// int randomNumber(const int min, const int max)
-// {
-//     // Return a random number from min to max (including both).
-//     // Tip: min + rand() % (max - min + 1). Seed once in main with srand(time(0)).
-// }
+    while(true)
+    {
+        cout << "Enter your name: ";
+        getline(cin, name);
 
-// void waitForEnter()
-// {
-//     // Print "Press Enter to continue..." and wait for Enter.
-// }
+        if(name != "")
+        {
+            return name;
+        }
+
+        cout << "Name cannot be empty." << endl;
+    }
+}
+
+int randomNumber(const int min, const int max)
+{
+    int number = min + rand() % (max - min + 1);
+
+    return number;
+}
+
+void waitForEnter()
+{
+    cout << "Press Enter to continue..." << endl;
+
+    string input;
+    getline(cin, input);
+}

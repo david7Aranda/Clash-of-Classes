@@ -10,7 +10,6 @@ using namespace std;
 
 Game::Game()
 {
-    // player starts as nullptr, running starts as true.
     player = nullptr;
     running = true;
 
@@ -18,7 +17,6 @@ Game::Game()
 
 Game::~Game()
 {
-    // delete player (deleting a nullptr is safe).
     delete player;
 
 }

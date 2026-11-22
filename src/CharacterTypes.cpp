@@ -1,45 +1,46 @@
 // CharacterTypes.cpp
-// Each commented-out function below has a note saying what it should do.
-// When you write one, replace its commented version with your real code.
 
 #include "CharacterTypes.h"
 #include "UI.h"
 #include "Art.h"
+#include <iostream>
+#include <string>
 
-// Warrior::Warrior(const std::string & _name)
-//     : Character(_name, startHealth, startAttack, startDefense)
-// {
-//     // Replace startHealth, startAttack and startDefense with random values that
-//     // suit a warrior (high health and defense), for example randomNumber(110, 130).
-//     // Set stamina and pick a weapon.
-// }
+using namespace std;
 
-// std::string Warrior::getType() const
-// {
-//     // Return "Warrior".
-// }
+// ==================== WARRIOR ====================
+Warrior::Warrior(const string & _name) : Character(_name, startHealth, startAttack, startDefense)
+{
+    s
+}
 
-// void Warrior::attack(Character & target)
-// {
-//     // Basic attack: work out the damage (attackPower plus a small random amount),
-//     // print a warrior-style message, then call target.takeDamage(damage).
-// }
+string Warrior::getType() const
+{
+    return "Warrior";
+    
+}
 
-// void Warrior::specialAttack(Character & target)
-// {
-//     // Power Strike: if there is enough stamina, spend it and deal big damage
-//     // with its own message. If not, print a message and do a normal attack.
-// }
+void Warrior::attack(Character & target)
+{
+    // Basic attack: work out the damage (attackPower plus a small random amount),
+    // print a warrior-style message, then call target.takeDamage(damage).
+}
 
-// void Warrior::defend()
-// {
-//     // Raise a shield: print your own message and set defending to true.
-// }
+void Warrior::specialAttack(Character & target)
+{
+    // Power Strike: if there is enough stamina, spend it and deal big damage
+    // with its own message. If not, print a message and do a normal attack.
+}
 
-// void Warrior::updateDuringCombat()
-// {
-//     // Call Character::updateDuringCombat(), then regain some stamina (up to a maximum).
-// }
+void Warrior::defend()
+{
+    // Raise a shield: print your own message and set defending to true.
+}
+
+void Warrior::updateDuringCombat()
+{
+    // Call Character::updateDuringCombat(), then regain some stamina (up to a maximum).
+}
 
 void Warrior::printPortrait(const bool facingLeft) const
 {
@@ -64,6 +65,7 @@ void Warrior::printPortrait(const bool facingLeft) const
 //     // Call Character::load(in), then read stamina and weapon.
 // }
 
+// ==================== MAGE ====================
 // Mage::Mage(const std::string & _name)
 //     : Character(_name, startHealth, startAttack, startDefense)
 // {
@@ -71,10 +73,10 @@ void Warrior::printPortrait(const bool facingLeft) const
 //     // (low health and defense, high attack). Set mana and spellPower.
 // }
 
-// std::string Mage::getType() const
-// {
-//     // Return "Mage".
-// }
+std::string Mage::getType() const
+{
+    return "Mage";
+}
 
 // void Mage::attack(Character & target)
 // {
@@ -101,9 +103,9 @@ void Warrior::printPortrait(const bool facingLeft) const
 void Mage::printPortrait(const bool facingLeft) const
 {
     if (facingLeft)
-        std::cout << MAGE_LEFT;
+        cout << MAGE_LEFT;
     else
-        std::cout << MAGE_RIGHT;
+        cout << MAGE_RIGHT;
 }
 
 // void Mage::printStats() const
@@ -120,7 +122,7 @@ void Mage::printPortrait(const bool facingLeft) const
 // {
 //     // Call Character::load(in), then read mana and spellPower.
 // }
-
+// ==================== ROGUE ====================
 // Rogue::Rogue(const std::string & _name)
 //     : Character(_name, startHealth, startAttack, startDefense)
 // {
@@ -128,10 +130,10 @@ void Mage::printPortrait(const bool facingLeft) const
 //     // (medium health, quick attacks). Set energy and critChance.
 // }
 
-// std::string Rogue::getType() const
-// {
-//     // Return "Rogue".
-// }
+std::string Rogue::getType() const
+{
+    return "Rogue";
+}
 
 // void Rogue::attack(Character & target)
 // {
@@ -159,9 +161,9 @@ void Mage::printPortrait(const bool facingLeft) const
 void Rogue::printPortrait(const bool facingLeft) const
 {
     if (facingLeft)
-        std::cout << ROGUE_LEFT;
+        cout << ROGUE_LEFT;
     else
-        std::cout << ROGUE_RIGHT;
+        cout << ROGUE_RIGHT;
 }
 
 // void Rogue::printStats() const

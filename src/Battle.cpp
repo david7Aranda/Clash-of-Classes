@@ -1,47 +1,144 @@
 // Battle.cpp
-// Outline: each commented-out function has a note saying what it should do.
-// Write the real functions underneath, the same way you did for Computer.cpp.
+#include "Battle.h"
+#include "UI.h"
+#include "Art.h"
+#include <iostream>
 
-// #include "Battle.h"
-// #include "UI.h"
-// #include "Art.h"
-//
-// Battle::Battle(Character * _player, Character * _opponent)
-// {
-//     // Store the two pointers and start at round 0.
-// }
-//
-// BattleResult Battle::run()
-// {
-//     // Print the VS banner and both names.
-//     // Loop while both characters are alive:
-//     //   add 1 to round, showStatus(),
-//     //   playerTurn() - if it returns false, the player fled: return PLAYER_FLED,
-//     //   if the opponent is still alive, opponentTurn().
-//     // After the loop, call updateAfterCombat on both characters
-//     // and return PLAYER_WON or PLAYER_LOST.
-// }
-//
-// void Battle::showStatus() const
-// {
-//     // Print the round number and both names with their health bars.
-//     // Then the fighters:
-//     //     player->printPortrait(false);
-//     //     std::cout << VS_ART;
-//     //     opponent->printPortrait(true);
-// }
-//
-// bool Battle::playerTurn()
-// {
-//     // Call player->updateDuringCombat().
-//     // Show the actions: 1 Attack, 2 Special, 3 Defend, 4 Use potion, 5 Flee.
-//     // Read a choice (readChoice(1, 5)) and call the matching function on player,
-//     // with *opponent as the target. Return false only for Flee.
-// }
-//
-// void Battle::opponentTurn()
-// {
-//     // Call opponent->updateDuringCombat().
-//     // Pick an action with randomNumber: mostly attacks, sometimes special or defend,
-//     // and a potion when health is low. The target is *player.
-// }
+using namespace std;
+
+Battle::Battle(Character * _player, Character * _opponent)
+{
+    player = _player;
+    opponent = _opponent;
+    round = 0;
+}
+
+BattleResult Battle::run()
+{
+    cout << player->getName() << " VS " << opponent->getName() << endl;
+
+    while(player->isAlive() && opponent->isAlive())
+    {
+        round = round + 1;
+
+        showStatus();
+
+        if(playerTurn() == false)
+        {
+            cout << player->getName() << " fled the battle!" << endl;
+
+            return PLAYER_FLED;
+        }
+
+        if(opponent->isAlive())
+        {
+            opponentTurn();
+        }
+    }
+
+    if(player->isAlive())
+    {
+        player->updateAfterCombat(true);
+        opponent->updateAfterCombat(false);
+
+        return PLAYER_WON;
+    }
+    else
+    {
+        player->updateAfterCombat(false);
+        opponent->updateAfterCombat(true);
+
+        return PLAYER_LOST;
+    }
+}
+
+void Battle::showStatus() const
+{
+    cout << endl;
+    cout << "========== Round " << round
+         << " ==========" << endl;
+
+    cout << player->getName() << ": ";
+    printHealthBar(player->getHealth(),
+                   player->getMaxHealth());
+
+    cout << opponent->getName() << ": ";
+    printHealthBar(opponent->getHealth(),
+                   opponent->getMaxHealth());
+
+    cout << endl;
+
+    player->printPortrait(false);
+
+    cout << VS_ART << endl;
+
+    opponent->printPortrait(true);
+}
+
+bool Battle::playerTurn()
+{
+    player->updateDuringCombat();
+
+    cout << endl;
+    cout << "Your turn!" << endl;
+
+    cout << "1. Attack" << endl;
+    cout << "2. Special Attack" << endl;
+    cout << "3. Defend" << endl;
+    cout << "4. Use Potion" << endl;
+    cout << "5. Flee" << endl;
+
+    int choice = readChoice(1, 5);
+
+    if(choice == 1)
+    {
+        player->attack(*opponent);
+    }
+    else if(choice == 2)
+    {
+        player->specialAttack(*opponent);
+    }
+    else if(choice == 3)
+    {
+        player->defend();
+    }
+    else if(choice == 4)
+    {
+        player->usePotion();
+    }
+    else if(choice == 5)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void Battle::opponentTurn()
+{
+    opponent->updateDuringCombat();
+
+    cout << endl;
+    cout << opponent->getName()
+         << "'s turn!" << endl;
+
+    int choice = randomNumber(1, 10);
+
+    if(opponent->getHealth() < opponent->getMaxHealth() / 2
+       && randomNumber(1, 4) == 1)
+    {
+        opponent->usePotion();
+    }
+    else if(choice <= 6)
+    {
+        opponent->attack(*player);
+    }
+    else if(choice <= 8)
+    {
+        opponent->specialAttack(*player);
+    }
+    else
+    {
+        opponent->defend();
+    }
+}

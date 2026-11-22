@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "UI.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -84,10 +85,10 @@ void Character::heal(const int amount)
 
 bool Character::usePotion()
 {
-    if(potion > 0)
+    if(potions > 0)
     {
-        potion = potion - 1;
-        health = health + 30;
+        potions = potions - 1;
+        heal(30);
         cout << name << " used a potion and recovered health!" << endl;
         return true;
     }
@@ -137,7 +138,17 @@ void Character::updateAfterCombat(const bool won)
 {
     // Stop defending. If won, call gainXP (for example 50).
     // Print a short message either way.
-    
+    defending = false;
+    if(won)
+    {
+        cout << name << " won the battle!" << endl;
+        gainXP(50);
+    }
+    else
+    {
+        cout << name << " lost the battle!" << endl;
+    }
+
 }
 
 void Character::defend()
@@ -148,21 +159,48 @@ void Character::defend()
 
 void Character::printStats() const
 {
-    // Print name, type (getType()), level, XP, health with a health bar
-    // (printHealthBar from UI), attack, defense and potions.
+    cout << "============================" << endl;
+
+    cout << "Name: " << name << endl;
+    cout << "Type: " << getType() << endl;
+    cout << "Level: " << level << endl;
+    cout << "XP: " << xp << "/" << level * 100 << endl;
+
+    cout << "Health: " << health << "/" << maxHealth << endl;
+    cout << "Attack: " << attackPower << endl;
+    cout << "Defense: " << defense << endl;
+    cout << "Potions: " << potions << endl;
+
+    cout << "============================" << endl;
+    
 }
 
-void Character::save(std::ofstream & out) const
+void Character::save(ofstream & out) const
 {
-    // Write one value per line with a label, for example:
-    // name David
-    // level 3
-    // (Game writes the type line before calling this, so don't write it here.)
+    out << "name " << name << endl;
+    out << "level " << level << endl;
+    out << "xp " << xp << endl;
+    out << "health " << health << endl;
+    out << "maxHealth " << maxHealth << endl;
+    out << "attackPower " << attackPower << endl;
+    out << "defense " << defense << endl;
+    out << "potions " << potions << endl;
+    out << "defending " << defending << endl;
 }
 
-void Character::load(std::ifstream & in)
+void Character::load(ifstream & in)
 {
-    // Read the values back in the same order save wrote them.
-    // Tip: in >> label >> value reads a line like "level 3".
-    // If names can have spaces, read the name with getline.
+    string label;
+
+    in >> label;
+    getline(in >> ws, name);
+
+    in >> label >> level;
+    in >> label >> xp;
+    in >> label >> health;
+    in >> label >> maxHealth;
+    in >> label >> attackPower;
+    in >> label >> defense;
+    in >> label >> potions;
+    in >> label >> defending;
 }

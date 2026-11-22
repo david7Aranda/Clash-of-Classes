@@ -7,11 +7,12 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+using namespace std;
 
 class Character // abstract base class: the "= 0" functions make it abstract
 {
     protected: // protected, so Warrior, Mage and Rogue can use these directly
-        std::string name;
+        string name;
         int level;
         int xp;
         int health;
@@ -24,7 +25,7 @@ class Character // abstract base class: the "= 0" functions make it abstract
         Character(const std::string & _name, const int _maxHealth, const int _attackPower, const int _defense);
 
         // Getters
-        std::string getName() const;
+        string getName() const;
         int getLevel() const;
         int getHealth() const;
         int getMaxHealth() const;
@@ -42,7 +43,7 @@ class Character // abstract base class: the "= 0" functions make it abstract
         void updateAfterCombat(const bool won);
 
         // Each type does these its own way
-        virtual std::string getType() const = 0;
+        virtual string getType() const = 0;
         virtual void attack(Character & target) = 0;
         virtual void specialAttack(Character & target) = 0;
         virtual void defend();
@@ -50,8 +51,8 @@ class Character // abstract base class: the "= 0" functions make it abstract
         virtual void printStats() const;
 
         // Save and load (each type overrides these to add its own variables)
-        virtual void save(std::ofstream & out) const;
-        virtual void load(std::ifstream & in);
+        virtual void save(ofstream & out) const;
+        virtual void load(ifstream & in);
 
         virtual ~Character() {} // virtual, so deleting through a Character* works
 };

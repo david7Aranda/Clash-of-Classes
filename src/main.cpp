@@ -11,6 +11,8 @@ using namespace std;
 //    make a Game object, call its run() function, then return 0.
 int main()
 {
+    srand(time(0));
+
     Game game;
     game.run();
 }
