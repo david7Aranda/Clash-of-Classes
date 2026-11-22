@@ -4,11 +4,14 @@
 #include "CharacterTypes.h"
 #include "Battle.h"
 #include "UI.h"
+#include <iostream>
+
+using namespace std;
 
 Game::Game()
 {
     // player starts as nullptr, running starts as true.
-    payer = nullptr;
+    player = nullptr;
     running = true;
 
 }
@@ -20,22 +23,60 @@ Game::~Game()
 
 }
 
-void Game::run()
+void Game::run()                        
 {
-    // printTitle(). While running: showMainMenu(), read a choice, and call
-    // newCharacter, loadCharacter, startDuel, saveCharacter, player->printStats(),
-    // or set running to false to exit.
-    showMainMenu();
-    while(running)
-    {
+    printTitle();
 
+    while (running)
+    {
+        showMainMenu();
+        int choice = readChoice(1, 6);
+
+        switch (choice)
+        {
+            case 1:
+                newCharacter();
+                break;
+            case 2:
+                loadCharacter();
+                break;
+            case 3:
+                startDuel();
+                break;
+            case 4:
+                saveCharacter();
+                break;
+            case 5:
+                if (player != nullptr)          
+                {
+                    player->printStats();       
+                }
+                else                            
+                {
+                    std::cout << "Create a character first." << std::endl;
+                }
+                break;
+            case 6:
+                running = false;
+                break;
+        }
     }
-}
+}                                       
+
 
 void Game::showMainMenu() const
 {
-    // Print the menu in an ASCII box:
-    // 1 New character, 2 Load character, 3 Duel, 4 Save, 5 View stats, 6 Exit.
+    cout << endl;
+    cout << "+------------------------------------------+" << endl;
+    cout << "|                MAIN MENU                 |" << endl;
+    cout << "+------------------------------------------+" << endl;
+    cout << "|  1) New character  - create your hero    |" << endl;
+    cout << "|  2) Load character - continue a save     |" << endl;
+    cout << "|  3) Duel           - fight an opponent   |" << endl;
+    cout << "|  4) Save           - save your hero      |" << endl;
+    cout << "|  5) View stats     - see your hero       |" << endl;
+    cout << "|  6) Exit                                 |" << endl;
+    cout << "+------------------------------------------+" << endl;
 }
 
 void Game::newCharacter()

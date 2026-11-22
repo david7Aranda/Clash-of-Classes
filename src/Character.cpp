@@ -2,82 +2,148 @@
 
 #include "Character.h"
 #include "UI.h"
+#include <iostream>
 
-Character::Character(const std::string & _name, const int _maxHealth, const int _attackPower, const int _defense)
+using namespace std;
+
+Character::Character(const string & _name, const int _maxHealth, const int _attackPower, const int _defense)
 {
-    // Set the name and stats from the parameters.
-    // Start at level 1 with 0 XP, full health (health = maxHealth),
-    // 3 potions, and not defending.
+    name = _name;
+    level = 1;
+    xp = 0;
+    health = _maxHealth;
+    maxHealth = _maxHealth;
+    attackPower = _attackPower;
+    defense = _defense;
+    potions = 3;
+    defending = false;
 }
 
-std::string Character::getName() const
+string Character::getName() const
 {
-    // Return the name. (The other getters work the same way.)
+    return name;
 }
 
 int Character::getLevel() const
 {
+    return level;
 }
 
 int Character::getHealth() const
 {
+    return health;
 }
 
 int Character::getMaxHealth() const
 {
+    return maxHealth;
 }
 
 bool Character::isAlive() const
 {
     // True while health is above 0.
+    if(health > 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 void Character::takeDamage(const int amount)
 {
-    // Subtract defense from amount, but always take at least 1 damage.
-    // If defending, cut the damage in half.
-    // Lower health, but never below 0. Print how much damage this character took.
+    int damage = amount - defense;
+    if(damage < 1)
+    {
+        damage = 1;
+    }
+    if(defending)
+    {
+        damage = max(1, damage / 2);
+    }
+    health = health - damage;
+    if(health < 0)
+    {
+        health = 0;
+    }
+    cout << name << " took " << damage << " damage." << endl;
 }
 
 void Character::heal(const int amount)
 {
     // Raise health by amount, but never above maxHealth.
+    if(health <= 0)
+    {
+        return;
+    }
+    health = health + amount;
+    if(health > maxHealth)
+    {
+        health = maxHealth;
+    }
 }
 
 bool Character::usePotion()
 {
-    // If there are potions left: use one, heal (for example 30), return true.
-    // Otherwise print a message and return false.
+    if(potion > 0)
+    {
+        potion = potion - 1;
+        health = health + 30;
+        cout << name << " used a potion and recovered health!" << endl;
+        return true;
+    }
+    cout << name << " has no potions left!" << endl;
+    return false;
 }
 
 void Character::gainXP(const int amount)
 {
-    // Add amount to xp. When xp reaches level * 100, level up:
-    // level goes up by 1, xp starts over, maxHealth/attackPower/defense go up a little,
-    // and health refills. Print a level-up message with the name.
+    if(amount <= 0)
+    {
+        return;
+    }
+    xp = xp + amount;
+
+    if (xp >= level * 100)
+    {
+        level++;
+        xp = 0;
+
+        // Increase character stats
+        maxHealth += 10;
+        attackPower += 2;
+        defense += 1;
+
+        // Restore health
+        health = maxHealth;
+
+        cout << name
+            << " leveled up! Now level "
+            << level << "!" << endl;
+    }
+
 }
 
 void Character::rest()
 {
-    // Refill health to maxHealth. Used between duels.
+    health = maxHealth;
 }
 
 void Character::updateDuringCombat()
 {
-    // Called at the start of this character's turn: stop defending.
-    // Warrior, Mage and Rogue override this: they call Character::updateDuringCombat()
-    // first, then regain some stamina, mana or energy.
+    defending = false; 
 }
 
 void Character::updateAfterCombat(const bool won)
 {
     // Stop defending. If won, call gainXP (for example 50).
     // Print a short message either way.
+    
 }
 
 void Character::defend()
 {
-    // Set defending to true and print a message with the name.
+    defending = true;
+    cout << name << " is defending" << endl;
 }
 
 void Character::printStats() const
