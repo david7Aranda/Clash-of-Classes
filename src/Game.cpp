@@ -79,43 +79,216 @@ void Game::showMainMenu() const
 
 void Game::newCharacter()
 {
-    // Show the three types, each with a one-line description.
-    // Read the type (readChoice(1, 3)) and a name (readName()).
-    // delete the old player, then player = createCharacter(type, name).
-    // Greet the player by name and print their stats.
+    cout << endl;
+    cout << "Choose your character type:" << endl;
+
+    cout << "1. Warrior - High health and defense" << endl;
+    cout << "2. Mage - Strong magic attacks" << endl;
+    cout << "3. Rogue - Fast attacks and critical hits" << endl;
+
+    int choice = readChoice(1, 3);
+
+    string type;
+
+    if(choice == 1)
+    {
+        type = "Warrior";
+    }
+    else if(choice == 2)
+    {
+        type = "Mage";
+    }
+    else
+    {
+        type = "Rogue";
+    }
+
+    string name = readName();
+
+    delete player;
+
+    player = createCharacter(type, name);
+
+    cout << endl;
+    cout << "Welcome, " << player->getName() << "!" << endl;
+    cout << "You are a " << player->getType() << "!" << endl;
+
+    player->printStats();
 }
 
 void Game::loadCharacter()
 {
-    // Ask for the save file name. Open an ifstream; if it didn't open, say so and return.
-    // Read the type line, delete the old player, make the right type with
-    // createCharacter(type, ""), then call player->load(in).
+    string fileName;
+
+    cout << "Enter the save file name: ";
+    getline(cin, fileName);
+
+    ifstream in(fileName);
+
+    if(!in.is_open())
+    {
+        cout << "Could not open save file." << endl;
+        return;
+    }
+
+    string label;
+    string type;
+
+    in >> label >> type;
+
+    if(label != "type")
+    {
+        cout << "Invalid save file." << endl;
+        return;
+    }
+
+    Character * loadedPlayer = createCharacter(type, "");
+
+    if(loadedPlayer == nullptr)
+    {
+        cout << "Unknown character type." << endl;
+        return;
+    }
+
+    loadedPlayer->load(in);
+
+    if(in.fail())
+    {
+        cout << "Could not load character." << endl;
+        delete loadedPlayer;
+        return;
+    }
+
+    delete player;
+    player = loadedPlayer;
+
+    cout << "Character loaded successfully!" << endl;
+    player->printStats();
 }
 
 void Game::saveCharacter() const
 {
-    // If there is no player yet, say so and return.
-    // Open an ofstream (for example name + ".sav"), write "type " and getType()
-    // on the first line, then call player->save(out).
+    if(player == nullptr)
+    {
+        cout << "Create a character first." << endl;
+        return;
+    }
+
+    string fileName = player->getName() + ".sav";
+
+    ofstream out(fileName);
+
+    if(!out.is_open())
+    {
+        cout << "Could not save character." << endl;
+        return;
+    }
+
+    out << "type " << player->getType() << endl;
+
+    player->save(out);
+
+    out.close();
+
+    cout << "Character saved to " << fileName << endl;
 }
 
 void Game::startDuel()
 {
-    // If there is no player yet, say so and return.
-    // Make an opponent with makeRandomOpponent(), create a Battle with player and
-    // opponent, run it, and print VICTORY or DEFEAT from the result.
-    // delete the opponent afterwards, then let the player rest().
+    if(player == nullptr)
+    {
+        cout << "Create a character first." << endl;
+        return;
+    }
+
+    Character * opponent = makeRandomOpponent();
+
+    if(opponent == nullptr)
+    {
+        cout << "Could not create an opponent." << endl;
+        return;
+    }
+
+    cout << endl;
+    cout << "A new opponent has appeared!" << endl;
+
+    Battle battle(player, opponent);
+
+    BattleResult result = battle.run();
+
+    if(result == PLAYER_WON)
+    {
+        cout << endl;
+        cout << "VICTORY!" << endl;
+    }
+    else if(result == PLAYER_LOST)
+    {
+        cout << endl;
+        cout << "DEFEAT!" << endl;
+    }
+    else
+    {
+        cout << endl;
+        cout << "You fled the battle!" << endl;
+    }
+
+    delete opponent;
+
+    player->rest();
+
+    cout << "Your health has been restored!" << endl;
 }
 
-Character * Game::createCharacter(const std::string & type, const std::string & name) const
+Character * Game::createCharacter(const string & type, const string & name) const
 {
-    // Return a new Warrior, Mage or Rogue (made with new) depending on type,
-    // or nullptr if the type is unknown. newCharacter, loadCharacter and
-    // makeRandomOpponent all use this.
+    if(type == "Warrior")
+    {
+        return new Warrior(name);
+    }
+    else if(type == "Mage")
+    {
+        return new Mage(name);
+    }
+    else if(type == "Rogue")
+    {
+        return new Rogue(name);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 Character * Game::makeRandomOpponent() const
 {
-    // Pick a random type and a random name from a short list,
-    // and return createCharacter(type, name).
+    int choice = randomNumber(1, 3);
+
+    string type;
+
+    if(choice == 1)
+    {
+        type = "Warrior";
+    }
+    else if(choice == 2)
+    {
+        type = "Mage";
+    }
+    else
+    {
+        type = "Rogue";
+    }
+
+    string names[5] = {
+        "Grok",
+        "Shadow",
+        "Dragon",
+        "Knight",
+        "Hunter"
+    };
+
+    int nameChoice = randomNumber(0, 4);
+
+    string name = names[nameChoice];
+
+    return createCharacter(type, name);
 }
